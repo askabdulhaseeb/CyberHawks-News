@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1066277289933-67mmsoevsir48bb12fjq5s6032g69cgi.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1066277289933-67mmsoevsir48bb12fjq5s6032g69cgi</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1066277289933-0ffh8rgphq3fb8qqcj5pg715r9q4o1bg.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCB7YcjDHmFVwwlQRXVU8qPkfZvmH8p4cw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1066277289933</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>Cyber-News---cybehawks</string>
+	<key>PROJECT_ID</key>
+	<string>cybehawks-news</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cybehawks-news.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1066277289933:ios:6a2c4ce364ac9da610ce84</string>
+</dict>
+</plist>
