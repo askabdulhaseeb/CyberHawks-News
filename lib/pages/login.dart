@@ -146,28 +146,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(color: Color(0xff81868B)),
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                      width: 300,
-                      child: SignInWithAppleButton(onPressed: () async {
-                        final credentials =
-                            await SignInWithApple.getAppleIDCredential(scopes: [
-                          AppleIDAuthorizationScopes.email,
-                          AppleIDAuthorizationScopes.fullName
-                        ]);
-                        debugPrint(credentials.email);
-                        debugPrint(credentials.state);
-                        OAuthProvider oAuthProvider =
-                            OAuthProvider("apple.com");
-                        final AuthCredential credential =
-                            oAuthProvider.credential(
-                          idToken: String.fromCharCodes(
-                              credentials.identityToken!.codeUnits),
-                          accessToken: String.fromCharCodes(
-                              credentials.authorizationCode.codeUnits),
-                        );
-                        await FirebaseAuth.instance
-                            .signInWithCredential(credential);
+                    // SizedBox(
+                    //   height: 30,
+                    //   width: 300,
+                    //   child: SignInWithAppleButton(onPressed: () async {
+                    //     final credentials =
+                    //         await SignInWithApple.getAppleIDCredential(scopes: [
+                    //       AppleIDAuthorizationScopes.email,
+                    //       AppleIDAuthorizationScopes.fullName
+                    //     ]);
+                    //     debugPrint(credentials.email);
+                    //     debugPrint(credentials.state);
+                    //     OAuthProvider oAuthProvider =
+                    //         OAuthProvider("apple.com");
+                    //     final AuthCredential credential =
+                    //         oAuthProvider.credential(
+                    //       idToken: String.fromCharCodes(
+                    //           credentials.identityToken!.codeUnits),
+                    //       accessToken: String.fromCharCodes(
+                    //           credentials.authorizationCode.codeUnits),
+                    //     );
+                    //     await FirebaseAuth.instance
+                    //         .signInWithCredential(credential);
 
 //                       try {
 //
@@ -219,8 +219,8 @@ class _LoginScreenState extends State<LoginScreen> {
 //                       } catch (error) {
 //                         print("error with apple sign in");
 //                       }
-                      }),
-                    ),
+                    // }),
+                    // ),
 
                     // ElevatedButton.icon(
                     //   style: ButtonStyle(
@@ -240,9 +240,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     //     style: TextStyle(color: Color(0xff81868B)),
                     //   ),
                     // ),
+                    // ],
+                    // ),
+                    // )
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

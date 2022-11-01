@@ -1,5 +1,6 @@
 import 'package:cybehawks/pages/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/services.dart';
@@ -44,11 +45,12 @@ class AuthController extends ChangeNotifier {
   Future<void> loginWithPhone(String phone) async {
     await _auth.signInWithPhoneNumber(
       phone,
-      RecaptchaVerifier(
-        container: 'recaptcha',
-        size: RecaptchaVerifierSize.compact,
-        theme: RecaptchaVerifierTheme.dark,
-      ),
+      // RecaptchaVerifier(
+      //   container: 'recaptcha',
+      //   size: RecaptchaVerifierSize.compact,
+      //   theme: RecaptchaVerifierTheme.dark,
+      //   auth: FirebaseAuth.instanceFor(app: Firebase.app())
+      // ),
     );
   }
 
