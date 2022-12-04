@@ -13,7 +13,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final User? _user = FirebaseAuth.instance.currentUser;
-
   bool notification = false;
 
   @override
@@ -33,9 +32,7 @@ class _ProfileState extends State<Profile> {
                       color: Theme.of(context).primaryColor,
                       child: Column(
                         children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                           Column(
                             children: [
                               Center(
@@ -43,7 +40,7 @@ class _ProfileState extends State<Profile> {
                                   height: 150,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    image: (_user!.photoURL != null)
+                                    image: (_user?.photoURL != null)
                                         ? DecorationImage(
                                             fit: BoxFit.contain,
                                             image:
@@ -62,23 +59,21 @@ class _ProfileState extends State<Profile> {
                                 height: 8,
                               ),
                               Text(
-                                _user!.displayName!,
+                                _user?.displayName ?? 'no name found',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w900, fontSize: 24),
                               ),
-                              _user!.email != null
+                              _user?.email != null
                                   ? Text(
-                                      _user!.email!,
+                                      _user?.email ?? 'No Email Found',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 14),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ],
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                           Expanded(
                             child: Container(
                               width: double.infinity,
@@ -96,16 +91,21 @@ class _ProfileState extends State<Profile> {
                                 children: [
                                   InfoTile(
                                     title: 'Name',
-                                    value: _user!.displayName!,
+                                    value:
+                                        _user?.displayName ?? 'No Name Found',
                                   ),
-                                  _user!.email != null
+                                  _user?.email != null
                                       ? InfoTile(
-                                          title: 'Email', value: _user!.email!)
-                                      : SizedBox(),
-                                  (_user!.phoneNumber != null)
+                                          title: 'Email',
+                                          value:
+                                              _user?.email ?? 'No Email Found')
+                                      : const SizedBox(),
+                                  (_user?.phoneNumber != null)
                                       ? InfoTile(
                                           title: 'Phone No',
-                                          value: _user!.phoneNumber.toString(),
+                                          value:
+                                              _user?.phoneNumber?.toString() ??
+                                                  'No Phone Number Found',
                                         )
                                       : const SizedBox(),
                                   Container(
@@ -146,7 +146,7 @@ class _ProfileState extends State<Profile> {
                   )
                 ],
               )
-            : (_user!.displayName == null || _user!.email == null)
+            : (_user?.displayName == null || _user?.email == null)
                 ? TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -156,7 +156,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       );
                     },
-                    child: Text('Add Your Details'),
+                    child: const Text('Add Your Details'),
                   )
                 : Center(
                     child: Column(
@@ -169,9 +169,7 @@ class _ProfileState extends State<Profile> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(
-                          height: 16,
-                        ),
+                        const SizedBox(height: 16),
                         PrimaryButton(
                           text: 'Login',
                           onPressed: () {

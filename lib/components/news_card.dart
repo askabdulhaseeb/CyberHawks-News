@@ -1,3 +1,5 @@
+// import 'dart:html';
+import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -5,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polls/flutter_polls.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:cybehawks/auth/auth_bloc.dart';
 import 'package:cybehawks/controller/post_controller.dart';
 import 'package:cybehawks/models/news.dart';
@@ -16,6 +16,7 @@ import 'package:cybehawks/pages/dynamic/dynamic_textfield.dart';
 import 'package:cybehawks/pages/home.dart';
 import 'package:cybehawks/pages/login.dart';
 import 'package:cybehawks/pages/news_detail.dart';
+import 'package:image_network/image_network.dart';
 
 class NewsCard extends StatefulWidget {
   final News news;
@@ -27,6 +28,27 @@ class NewsCard extends StatefulWidget {
 }
 
 class _NewsCardState extends State<NewsCard> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // print(widget.news.image);
+    // if (kIsWeb) {
+    //   ui.platformViewRegistry.registerViewFactory(
+    //     'https://user-images.githubusercontent.com/36308073/71608961-0c140380-2bb3-11ea-8e09-b55bb75e3448.png',
+    //     (int viewId) => ImageElement()
+    //       ..style.maxWidth = '100%'
+    //       ..style.maxHeight = '100%'
+    //       ..style.height = '200px'
+    //       ..style.width = '200px'
+    //       // ..style.width = '10' //or '0%'-'100%'
+    //       // ..style.height = '20' //or '0%'-'100%'
+    //       ..src =
+    //           'https://user-images.githubusercontent.com/36308073/71608961-0c140380-2bb3-11ea-8e09-b55bb75e3448.png',
+    //   );
+    // }
+  }
+
   Widget build(BuildContext context) {
     bool isVoted(bool b) {
       bool a = b;
@@ -275,677 +297,694 @@ class _NewsCardState extends State<NewsCard> {
       ss = 420;
     }
 
-    return (widget.news.p_ispoll == "yes")
-        // ? Container(
-        //     height: 100,
-        //     width: 100,
-        //     color: Colors.red,
-        //     child: Text(news.p_question.toString()),
-        //   )
-        ? Consumer<PostController>(
-            builder: (context, value, child) => Card(
-                  child: Column(
-                    children: [
-                      Container(
-                        //  color: Colors.amber,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 8),
-                        height: ss,
-                        //padding: const EdgeInsets.all(20),
-                        child: Center(
-                          child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            // itemCount: polls().length,
-                            itemCount: (widget.news.answerSize == "2")
-                                ? polls1().length
-                                : (widget.news.answerSize == "3")
-                                    ? polls2().length
-                                    : (widget.news.answerSize == "4")
-                                        ? polls3().length
-                                        : (widget.news.answerSize == "5")
-                                            ? polls4().length
-                                            : polls5().length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final Map<String, dynamic> poll =
-                                  (widget.news.answerSize == "2")
-                                      ? polls1()[0]
-                                      : (widget.news.answerSize == "3")
-                                          ? polls2()[0]
-                                          : (widget.news.answerSize == "4")
-                                              ? polls3()[0]
-                                              : (widget.news.answerSize == "5")
-                                                  ? polls4()[0]
-                                                  : polls5()[0];
+    if ((widget.news.p_ispoll == "yes")) {
+      return Consumer<PostController>(
+          builder: (context, value, child) => Card(
+                child: Column(
+                  children: [
+                    Container(
+                      //  color: Colors.amber,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 8),
+                      height: ss,
+                      //padding: const EdgeInsets.all(20),
+                      child: Center(
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          // itemCount: polls().length,
+                          itemCount: (widget.news.answerSize == "2")
+                              ? polls1().length
+                              : (widget.news.answerSize == "3")
+                                  ? polls2().length
+                                  : (widget.news.answerSize == "4")
+                                      ? polls3().length
+                                      : (widget.news.answerSize == "5")
+                                          ? polls4().length
+                                          : polls5().length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final Map<String, dynamic> poll =
+                                (widget.news.answerSize == "2")
+                                    ? polls1()[0]
+                                    : (widget.news.answerSize == "3")
+                                        ? polls2()[0]
+                                        : (widget.news.answerSize == "4")
+                                            ? polls3()[0]
+                                            : (widget.news.answerSize == "5")
+                                                ? polls4()[0]
+                                                : polls5()[0];
 
-                              final int days = DateTime(
-                                poll['end_date'].year,
-                                poll['end_date'].month,
-                                poll['end_date'].day,
+                            final int days = DateTime(
+                              poll['end_date'].year,
+                              poll['end_date'].month,
+                              poll['end_date'].day,
+                            )
+                                .difference(DateTime(
+                                  DateTime.now().year,
+                                  DateTime.now().month,
+                                  DateTime.now().day,
+                                ))
+                                .inDays;
+                            late int voteId = 2;
+                            return Container(
+                              //   color: Colors.red,
+                              //margin: const EdgeInsets.only(bottom: 20),
+                              child: FlutterPolls(
+                                //votedBackgroundColor: Colors.red,
+                                //votedProgressColor: Colors.amber,
+                                votesTextStyle: TextStyle(
+                                  color: (isVoted(true))
+                                      ? Colors.grey
+                                      : const Color(0xff009A98),
+                                ),
+                                leadingVotedProgessColor: Colors.grey,
+                                pollOptionsBorder: Border.all(
+                                  color: const Color(0xff009A98),
+                                ),
+                                pollOptionsHeight: 44,
+
+                                userVotedOptionId: voteId,
+                                pollId: poll['id'].toString(),
+                                // new x
+                                // hasVoted: hasVoted.value,
+                                // userVotedOptionId: userVotedOptionId.value,
+                                onVoted: (PollOption pollOption,
+                                    int newTotalVotes) async {
+                                  if (FirebaseAuth.instance.currentUser ==
+                                      null) {
+                                    context
+                                        .read<AuthBloc>()
+                                        .add(AuthLoginEvent());
+                                    return false;
+                                  } else {
+                                    setState(() {
+                                      voteId =
+                                          int.parse(pollOption.id.toString());
+                                    });
+                                    print(pollOption.id);
+                                    value.addvote(
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                        widget.news.id!,
+                                        pollOption.id!);
+                                    isVoted(false);
+                                    await Future.delayed(
+                                        const Duration(seconds: 2));
+
+                                    /// If HTTP status is success, return true else false
+                                    return true;
+                                  }
+                                },
+                                pollEnded: days < 0,
+                                hasVoted: isVoted(false),
+                                pollTitle: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    poll['question'],
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                pollOptions: List<PollOption>.from(
+                                  poll['options'].map(
+                                    (option) {
+                                      var a = PollOption(
+                                        id: option['id'],
+                                        title: Container(
+                                          height: 70,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              150,
+                                          child: Align(
+                                            alignment: (isVoted(false))
+                                                ? Alignment.centerLeft
+                                                : Alignment.center,
+                                            child: Text(
+                                              option['title'],
+                                              // textAlign: (isVoted())
+                                              //     ? TextAlign.left
+                                              //     : TextAlign.center,
+                                              style: TextStyle(
+                                                color: (isVoted(false))
+                                                    ? Colors.black
+                                                    : const Color(0xff009A98),
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              overflow: TextOverflow.clip,
+                                            ),
+                                          ),
+                                        ),
+                                        votes: option['votes'],
+                                      );
+                                      return a;
+                                    },
+                                  ),
+                                ),
+
+                                votedPercentageTextStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                metaWidget: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 6),
+                                      const Text(
+                                        '•',
+                                      ),
+                                      const SizedBox(
+                                        width: 6,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            days < 0
+                                                ? "ended"
+                                                : "ends $days days",
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                          // GestureDetector(
+                                          //     onTap: () {
+                                          //       //   value.isVotated(
+                                          //       //       FirebaseAuth.instance
+                                          //       //           .currentUser!.uid,
+                                          //       //       widget.news.id
+                                          //       //           .toString());
+                                          //       //   setState(() {
+                                          //       //     Navigator.of(context).push(
+                                          //       //         MaterialPageRoute(
+                                          //       //             builder: (context) {
+                                          //       //       return HomeScreen();
+                                          //       //     }));
+                                          //       //   });
+                                          //     },
+                                          //     child: Text(" View Result")),
+                                          SizedBox(width: 15),
+                                          (FirebaseAuth.instance.currentUser
+                                                          ?.email ==
+                                                      'cybehawksa@gmail.com' ||
+                                                  FirebaseAuth.instance
+                                                          .currentUser?.email ==
+                                                      "cybehawks@gmail.com")
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    value.undovote(
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid,
+                                                        widget.news.id
+                                                            .toString());
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          isVoted(false);
+                                                          return HomeScreen();
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    "Undo",
+                                                    style: TextStyle(
+                                                      color: (!isVoted(false))
+                                                          ? Colors.grey
+                                                          : const Color(
+                                                              0xff009A98),
+                                                    ),
+                                                  ))
+                                              : SizedBox(),
+                                          SizedBox(width: 15),
+                                          (FirebaseAuth.instance.currentUser
+                                                          ?.email ==
+                                                      'cybehawksa@gmail.com' ||
+                                                  FirebaseAuth.instance
+                                                          .currentUser?.email ==
+                                                      "cybehawks@gmail.com")
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    value.deleteNews(widget
+                                                        .news.id
+                                                        .toString());
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return HomeScreen();
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    "Delete",
+                                                    style: TextStyle(
+                                                        color: const Color(
+                                                            0xff009A98)),
+                                                  ))
+                                              : SizedBox(),
+                                          SizedBox(width: 15),
+                                          (FirebaseAuth.instance.currentUser
+                                                          ?.email ==
+                                                      'cybehawksa@gmail.com' ||
+                                                  FirebaseAuth.instance
+                                                          .currentUser?.email ==
+                                                      "cybehawks@gmail.com")
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              SingleListUse(
+                                                                  model: widget
+                                                                      .news)),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    "Edit",
+                                                    style: TextStyle(
+                                                        color: const Color(
+                                                            0xff009A98)),
+                                                  ))
+                                              : SizedBox(),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () {
+                                  if (FirebaseAuth.instance.currentUser ==
+                                      null) {
+                                    context
+                                        .read<AuthBloc>()
+                                        .add(AuthLoginEvent());
+                                    return;
+                                  }
+                                  Share.share(
+                                    '''CybeHawks Cyber Update you may be interested in ''' +
+                                        widget.news.link!,
+                                    subject:
+                                        'CybeHawks Cyber Update you may be interested in',
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.share,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  if (FirebaseAuth.instance.currentUser ==
+                                      null) {
+                                    context
+                                        .read<AuthBloc>()
+                                        .add(AuthLoginEvent());
+                                    return;
+                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          CommentsScreen(news: widget.news),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.mode_comment_outlined),
+                                style: ButtonStyle(
+                                  foregroundColor:
+                                      MaterialStateColor.resolveWith(
+                                    (states) => Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                label: (widget.news.comment!.length > 0)
+                                    ? Text(
+                                        widget.news.comment!.length.toString(),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : SizedBox(),
                               )
-                                  .difference(DateTime(
-                                    DateTime.now().year,
-                                    DateTime.now().month,
-                                    DateTime.now().day,
-                                  ))
-                                  .inDays;
-                              late int voteId = 2;
-                              return Container(
-                                //   color: Colors.red,
-                                //margin: const EdgeInsets.only(bottom: 20),
-                                child: FlutterPolls(
-                                  //votedBackgroundColor: Colors.red,
-                                  //votedProgressColor: Colors.amber,
-                                  votesTextStyle: TextStyle(
-                                    color: (isVoted(true))
-                                        ? Colors.grey
-                                        : const Color(0xff009A98),
+                            ],
+                          ),
+                          const Spacer(),
+                          StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('news')
+                                .doc(widget.news.id)
+                                .snapshots(),
+                            builder: (context, AsyncSnapshot snapshot) {
+                              bool liked = false;
+                              if (snapshot.hasData) {
+                                if (snapshot.data['like'].contains(
+                                    FirebaseAuth.instance.currentUser?.uid)) {
+                                  liked = true;
+                                } else {
+                                  liked = false;
+                                }
+                              }
+                              if (snapshot.hasData) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: liked
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.white,
+                                    border: Border.all(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
-                                  leadingVotedProgessColor: Colors.grey,
-                                  pollOptionsBorder: Border.all(
-                                    color: const Color(0xff009A98),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      if (FirebaseAuth.instance.currentUser ==
+                                          null) {
+                                        context
+                                            .read<AuthBloc>()
+                                            .add(AuthLoginEvent());
+                                        return;
+                                      }
+                                      await Provider.of<PostController>(context,
+                                              listen: false)
+                                          .toggleLike(
+                                        widget.news.id!,
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            snapshot.data['like'].length
+                                                .toString(),
+                                            style: TextStyle(
+                                              color: liked
+                                                  ? Colors.white
+                                                  : Theme.of(context)
+                                                      .primaryColor,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Icon(
+                                            Icons.thumb_up_alt_outlined,
+                                            size: 20,
+                                            color: liked
+                                                ? Colors.white
+                                                : Theme.of(context)
+                                                    .primaryColor,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  pollOptionsHeight: 44,
+                                );
+                              } else
+                                return CircularProgressIndicator();
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ));
+    } else {
+      return GestureDetector(
+        onTap: () {
+          if (kIsWeb) {
+            // launch(widget.news.link!);
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => NewsDetails(
+                  url: widget.news.link!,
+                ),
+              ),
+            );
+          }
+        },
+        child: Card(
+          child: Column(
+            children: [
+              // Container(
+              //   height: 200,
+              //   decoration: BoxDecoration(
+              //       image: DecorationImage(
+              //     image: NetworkImage(widget.news.image!),
+              //     fit: BoxFit.cover,
+              //   )),
+              // ),
+              widget.news.image != null
+                  ? Hero(
+                      tag: widget.news.title!,
+                      child:
+                      //  kIsWeb
+                      //     ? SizedBox(
+                      //         height: 150,
+                      //         width: 150,
+                      //         child: HtmlElementView(
+                      //           viewType:
+                      //               'https://user-images.githubusercontent.com/36308073/71608961-0c140380-2bb3-11ea-8e09-b55bb75e3448.png',
+                      //         ),
+                      //       )
+                      //     :
+                           Image.network(
+                              widget.news.image!,
+                              height: 150,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                    )
+                  //             ImageNetwork(
+                  //   image: widget.news.image!,
+                  //   // imageCache: CachedNetworkImageProvider(imageUrl),
+                  //   height: 150,
+                  //   width: 150,
+                  //   duration: 1500,
+                  //   curve: Curves.easeIn,
+                  //   onPointer: true,
+                  //   debugPrint: false,
+                  //   fullScreen: false,
+                  //   fitAndroidIos: BoxFit.cover,
+                  //   fitWeb: BoxFitWeb.cover,
+                  //   borderRadius: BorderRadius.circular(70),
+                  //   onLoading: const CircularProgressIndicator(
+                  //     color: Colors.indigoAccent,
+                  //   ),
+                  //   onError: const Icon(
+                  //     Icons.error,
+                  //     color: Colors.red,
+                  //   ),
+                  //   onTap: () {
+                  //     debugPrint("©gabriel_patrick_souza");
+                  //   },
+                  // ))
 
-                                  userVotedOptionId: voteId,
-                                  pollId: poll['id'].toString(),
-                                  // new x
-                                  // hasVoted: hasVoted.value,
-                                  // userVotedOptionId: userVotedOptionId.value,
-                                  onVoted: (PollOption pollOption,
-                                      int newTotalVotes) async {
+                  : SizedBox(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.news.publishedDate.toString(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xffD6DDE2),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      widget.news.title!,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      widget.news.description!,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              visualDensity: VisualDensity.compact,
+                              onPressed: () {
+                                if (FirebaseAuth.instance.currentUser == null) {
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(AuthLoginEvent());
+                                  return;
+                                }
+                                Share.share(
+                                  '''CybeHawks Cyber Update you may be interested in ''' +
+                                      widget.news.link!,
+                                  subject:
+                                      'CybeHawks Cyber Update you may be interested in',
+                                );
+                              },
+                              icon: Icon(
+                                Icons.share,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                if (FirebaseAuth.instance.currentUser == null) {
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(AuthLoginEvent());
+                                  return;
+                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        CommentsScreen(news: widget.news),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.mode_comment_outlined),
+                              style: ButtonStyle(
+                                foregroundColor: MaterialStateColor.resolveWith(
+                                  (states) => Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              label: (widget.news.comment!.length > 0)
+                                  ? Text(
+                                      widget.news.comment!.length.toString(),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  : SizedBox(),
+                            )
+                          ],
+                        ),
+                        const Spacer(),
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('news')
+                              .doc(widget.news.id)
+                              .snapshots(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            bool liked = false;
+                            if (snapshot.hasData) {
+                              if (snapshot.data['like'].contains(
+                                  FirebaseAuth.instance.currentUser?.uid)) {
+                                liked = true;
+                              } else {
+                                liked = false;
+                              }
+                            }
+                            if (snapshot.hasData) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: liked
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.white,
+                                  border: Border.all(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: InkWell(
+                                  onTap: () async {
                                     if (FirebaseAuth.instance.currentUser ==
                                         null) {
                                       context
                                           .read<AuthBloc>()
                                           .add(AuthLoginEvent());
-                                      return false;
-                                    } else {
-                                      setState(() {
-                                        voteId =
-                                            int.parse(pollOption.id.toString());
-                                      });
-                                      print(pollOption.id);
-                                      value.addvote(
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid,
-                                          widget.news.id!,
-                                          pollOption.id!);
-                                      isVoted(false);
-                                      await Future.delayed(
-                                          const Duration(seconds: 2));
-
-                                      /// If HTTP status is success, return true else false
-                                      return true;
+                                      return;
                                     }
+                                    await Provider.of<PostController>(context,
+                                            listen: false)
+                                        .toggleLike(
+                                      widget.news.id!,
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    );
                                   },
-                                  pollEnded: days < 0,
-                                  hasVoted: isVoted(false),
-                                  pollTitle: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      poll['question'],
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
                                     ),
-                                  ),
-                                  pollOptions: List<PollOption>.from(
-                                    poll['options'].map(
-                                      (option) {
-                                        var a = PollOption(
-                                          id: option['id'],
-                                          title: Container(
-                                            height: 70,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                150,
-                                            child: Align(
-                                              alignment: (isVoted(false))
-                                                  ? Alignment.centerLeft
-                                                  : Alignment.center,
-                                              child: Text(
-                                                option['title'],
-                                                // textAlign: (isVoted())
-                                                //     ? TextAlign.left
-                                                //     : TextAlign.center,
-                                                style: TextStyle(
-                                                  color: (isVoted(false))
-                                                      ? Colors.black
-                                                      : const Color(0xff009A98),
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                overflow: TextOverflow.clip,
-                                              ),
-                                            ),
-                                          ),
-                                          votes: option['votes'],
-                                        );
-                                        return a;
-                                      },
-                                    ),
-                                  ),
-
-                                  votedPercentageTextStyle: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  metaWidget: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
                                     child: Row(
                                       children: [
-                                        const SizedBox(width: 6),
-                                        const Text(
-                                          '•',
+                                        Text(
+                                          snapshot.data['like'].length
+                                              .toString(),
+                                          style: TextStyle(
+                                            color: liked
+                                                ? Colors.white
+                                                : Theme.of(context)
+                                                    .primaryColor,
+                                          ),
                                         ),
                                         const SizedBox(
-                                          width: 6,
+                                          width: 8,
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              days < 0
-                                                  ? "ended"
-                                                  : "ends $days days",
-                                              style:
-                                                  TextStyle(color: Colors.grey),
-                                            ),
-                                            // GestureDetector(
-                                            //     onTap: () {
-                                            //       //   value.isVotated(
-                                            //       //       FirebaseAuth.instance
-                                            //       //           .currentUser!.uid,
-                                            //       //       widget.news.id
-                                            //       //           .toString());
-                                            //       //   setState(() {
-                                            //       //     Navigator.of(context).push(
-                                            //       //         MaterialPageRoute(
-                                            //       //             builder: (context) {
-                                            //       //       return HomeScreen();
-                                            //       //     }));
-                                            //       //   });
-                                            //     },
-                                            //     child: Text(" View Result")),
-                                            SizedBox(width: 15),
-                                            (FirebaseAuth.instance.currentUser
-                                                            ?.email ==
-                                                        'cybehawksa@gmail.com' ||
-                                                    FirebaseAuth
-                                                            .instance
-                                                            .currentUser
-                                                            ?.email ==
-                                                        "cybehawks@gmail.com")
-                                                ? GestureDetector(
-                                                    onTap: () {
-                                                      value.undovote(
-                                                          FirebaseAuth.instance
-                                                              .currentUser!.uid,
-                                                          widget.news.id
-                                                              .toString());
-                                                      Navigator.of(context)
-                                                          .push(
-                                                        MaterialPageRoute(
-                                                          builder: (context) {
-                                                            isVoted(false);
-                                                            return HomeScreen();
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: Text(
-                                                      "Undo",
-                                                      style: TextStyle(
-                                                        color: (!isVoted(false))
-                                                            ? Colors.grey
-                                                            : const Color(
-                                                                0xff009A98),
-                                                      ),
-                                                    ))
-                                                : SizedBox(),
-                                            SizedBox(width: 15),
-                                            (FirebaseAuth.instance.currentUser
-                                                            ?.email ==
-                                                        'cybehawksa@gmail.com' ||
-                                                    FirebaseAuth
-                                                            .instance
-                                                            .currentUser
-                                                            ?.email ==
-                                                        "cybehawks@gmail.com")
-                                                ? GestureDetector(
-                                                    onTap: () {
-                                                      value.deleteNews(widget
-                                                          .news.id
-                                                          .toString());
-                                                      Navigator.of(context)
-                                                          .push(
-                                                        MaterialPageRoute(
-                                                          builder: (context) {
-                                                            return HomeScreen();
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: Text(
-                                                      "Delete",
-                                                      style: TextStyle(
-                                                          color: const Color(
-                                                              0xff009A98)),
-                                                    ))
-                                                : SizedBox(),
-                                            SizedBox(width: 15),
-                                            (FirebaseAuth.instance.currentUser
-                                                            ?.email ==
-                                                        'cybehawksa@gmail.com' ||
-                                                    FirebaseAuth
-                                                            .instance
-                                                            .currentUser
-                                                            ?.email ==
-                                                        "cybehawks@gmail.com")
-                                                ? GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.of(context)
-                                                          .push(
-                                                        MaterialPageRoute(
-                                                            builder: (_) =>
-                                                                SingleListUse(
-                                                                    model: widget
-                                                                        .news)),
-                                                      );
-                                                    },
-                                                    child: Text(
-                                                      "Edit",
-                                                      style: TextStyle(
-                                                          color: const Color(
-                                                              0xff009A98)),
-                                                    ))
-                                                : SizedBox(),
-                                          ],
+                                        Icon(
+                                          Icons.thumb_up_alt_outlined,
+                                          size: 20,
+                                          color: liked
+                                              ? Colors.white
+                                              : Theme.of(context).primaryColor,
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
                               );
-                            },
-                          ),
+                            } else
+                              return CircularProgressIndicator();
+                          },
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                  visualDensity: VisualDensity.compact,
-                                  onPressed: () {
-                                    if (FirebaseAuth.instance.currentUser ==
-                                        null) {
-                                      context
-                                          .read<AuthBloc>()
-                                          .add(AuthLoginEvent());
-                                      return;
-                                    }
-                                    Share.share(
-                                      '''CybeHawks Cyber Update you may be interested in ''' +
-                                          widget.news.link!,
-                                      subject:
-                                          'CybeHawks Cyber Update you may be interested in',
-                                    );
-                                  },
-                                  icon: Icon(
-                                    Icons.share,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                TextButton.icon(
-                                  onPressed: () {
-                                    if (FirebaseAuth.instance.currentUser ==
-                                        null) {
-                                      context
-                                          .read<AuthBloc>()
-                                          .add(AuthLoginEvent());
-                                      return;
-                                    }
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            CommentsScreen(news: widget.news),
-                                      ),
-                                    );
-                                  },
-                                  icon: Icon(Icons.mode_comment_outlined),
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateColor.resolveWith(
-                                      (states) =>
-                                          Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  label: (widget.news.comment!.length > 0)
-                                      ? Text(
-                                          widget.news.comment!.length
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                )
-                              ],
-                            ),
-                            const Spacer(),
-                            StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('news')
-                                  .doc(widget.news.id)
-                                  .snapshots(),
-                              builder: (context, AsyncSnapshot snapshot) {
-                                bool liked = false;
-                                if (snapshot.hasData) {
-                                  if (snapshot.data['like'].contains(
-                                      FirebaseAuth.instance.currentUser?.uid)) {
-                                    liked = true;
-                                  } else {
-                                    liked = false;
-                                  }
-                                }
-                                if (snapshot.hasData) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: liked
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.white,
-                                      border: Border.all(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        if (FirebaseAuth.instance.currentUser ==
-                                            null) {
-                                          context
-                                              .read<AuthBloc>()
-                                              .add(AuthLoginEvent());
-                                          return;
-                                        }
-                                        await Provider.of<PostController>(
-                                                context,
-                                                listen: false)
-                                            .toggleLike(
-                                          widget.news.id!,
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid,
-                                        );
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              snapshot.data['like'].length
-                                                  .toString(),
-                                              style: TextStyle(
-                                                color: liked
-                                                    ? Colors.white
-                                                    : Theme.of(context)
-                                                        .primaryColor,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            Icon(
-                                              Icons.thumb_up_alt_outlined,
-                                              size: 20,
-                                              color: liked
-                                                  ? Colors.white
-                                                  : Theme.of(context)
-                                                      .primaryColor,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                } else
-                                  return CircularProgressIndicator();
-                              },
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ))
-        : GestureDetector(
-            onTap: () {
-              if (kIsWeb) {
-                launch(widget.news.link!);
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => NewsDetails(
-                      url: widget.news.link!,
-                    ),
-                  ),
-                );
-              }
-            },
-            child: Card(
-              child: Column(
-                children: [
-                  widget.news.image != null
-                      ? Hero(
-                          tag: widget.news.title!,
-                          child: Image.network(
-                            widget.news.image!,
-                            height: 150,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : SizedBox(),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.news.publishedDate.toString(),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xffD6DDE2),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          widget.news.title!,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          widget.news.description!,
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                  visualDensity: VisualDensity.compact,
-                                  onPressed: () {
-                                    if (FirebaseAuth.instance.currentUser ==
-                                        null) {
-                                      context
-                                          .read<AuthBloc>()
-                                          .add(AuthLoginEvent());
-                                      return;
-                                    }
-                                    Share.share(
-                                      '''CybeHawks Cyber Update you may be interested in ''' +
-                                          widget.news.link!,
-                                      subject:
-                                          'CybeHawks Cyber Update you may be interested in',
-                                    );
-                                  },
-                                  icon: Icon(
-                                    Icons.share,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                TextButton.icon(
-                                  onPressed: () {
-                                    if (FirebaseAuth.instance.currentUser ==
-                                        null) {
-                                      context
-                                          .read<AuthBloc>()
-                                          .add(AuthLoginEvent());
-                                      return;
-                                    }
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            CommentsScreen(news: widget.news),
-                                      ),
-                                    );
-                                  },
-                                  icon: Icon(Icons.mode_comment_outlined),
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateColor.resolveWith(
-                                      (states) =>
-                                          Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  label: (widget.news.comment!.length > 0)
-                                      ? Text(
-                                          widget.news.comment!.length
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                )
-                              ],
-                            ),
-                            const Spacer(),
-                            StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('news')
-                                  .doc(widget.news.id)
-                                  .snapshots(),
-                              builder: (context, AsyncSnapshot snapshot) {
-                                bool liked = false;
-                                if (snapshot.hasData) {
-                                  if (snapshot.data['like'].contains(
-                                      FirebaseAuth.instance.currentUser?.uid)) {
-                                    liked = true;
-                                  } else {
-                                    liked = false;
-                                  }
-                                }
-                                if (snapshot.hasData) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: liked
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.white,
-                                      border: Border.all(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        if (FirebaseAuth.instance.currentUser ==
-                                            null) {
-                                          context
-                                              .read<AuthBloc>()
-                                              .add(AuthLoginEvent());
-                                          return;
-                                        }
-                                        await Provider.of<PostController>(
-                                                context,
-                                                listen: false)
-                                            .toggleLike(
-                                          widget.news.id!,
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid,
-                                        );
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              snapshot.data['like'].length
-                                                  .toString(),
-                                              style: TextStyle(
-                                                color: liked
-                                                    ? Colors.white
-                                                    : Theme.of(context)
-                                                        .primaryColor,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            Icon(
-                                              Icons.thumb_up_alt_outlined,
-                                              size: 20,
-                                              color: liked
-                                                  ? Colors.white
-                                                  : Theme.of(context)
-                                                      .primaryColor,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                } else
-                                  return CircularProgressIndicator();
-                              },
-                            ),
-                          ],
-                        )
                       ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:cybehawks/controller/auth.dart';
 import 'package:cybehawks/controller/post_controller.dart';
+import 'package:cybehawks/firebase_options.dart';
+import 'package:cybehawks/pages/profile.dart';
 import 'package:cybehawks/pages/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -16,14 +18,14 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -41,7 +43,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     notitficationPermission();
     initMessaging();
-    if (!kIsWeb) messaging.subscribeToTopic('all');
+    if(!kIsWeb)
+    messaging.subscribeToTopic('all');
   }
 
   void notitficationPermission() async {
@@ -59,13 +62,13 @@ class _MyAppState extends State<MyApp> {
   void initMessaging() async {
     var androiInit = const AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    var iosInit = const IOSInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+    // var iosInit = IOSInitializationSettings(
+    //   requestAlertPermission: true,
+    //   requestBadgePermission: true,
+    //   requestSoundPermission: true,
+    // );
 
-    var initSetting = InitializationSettings(android: androiInit, iOS: iosInit);
+    var initSetting = InitializationSettings(android: androiInit,);
 
     fltNotification = FlutterLocalNotificationsPlugin();
 
@@ -89,9 +92,9 @@ class _MyAppState extends State<MyApp> {
       icon: '@mipmap/launcher_icon',
       color: const Color(0xFF0f90f3),
     );
-    var iosDetails = const IOSNotificationDetails();
+    // var iosDetails = IOSNotificationDetails();
     var generalNotificationDetails =
-        NotificationDetails(android: androidDetails, iOS: iosDetails);
+        NotificationDetails(android: androidDetails, );
     await fltNotification!.show(0, message.notification!.title ?? '',
         message.notification!.body ?? '', generalNotificationDetails,
         payload: 'Notification');
