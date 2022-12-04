@@ -4,6 +4,7 @@ import 'package:cybehawks/components/primary_button.dart';
 import 'package:cybehawks/controller/auth.dart';
 import 'package:cybehawks/pages/pin_code_verification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -149,78 +150,51 @@ class _LoginScreenState extends State<LoginScreen> {
                     // SizedBox(
                     //   height: 30,
                     //   width: 300,
-                    //   child: SignInWithAppleButton(onPressed: () async {
-                    //     final credentials =
-                    //         await SignInWithApple.getAppleIDCredential(scopes: [
-                    //       AppleIDAuthorizationScopes.email,
-                    //       AppleIDAuthorizationScopes.fullName
-                    //     ]);
-                    //     debugPrint(credentials.email);
-                    //     debugPrint(credentials.state);
-                    //     OAuthProvider oAuthProvider =
-                    //         OAuthProvider("apple.com");
-                    //     final AuthCredential credential =
-                    //         oAuthProvider.credential(
-                    //       idToken: String.fromCharCodes(
-                    //           credentials.identityToken!.codeUnits),
-                    //       accessToken: String.fromCharCodes(
-                    //           credentials.authorizationCode.codeUnits),
-                    //     );
-                    //     await FirebaseAuth.instance
-                    //         .signInWithCredential(credential);
-
-//                       try {
-//
-//                         // final AuthorizationResult result = await AppleSignIn.performRequests([
-//                         //   AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-//                         // ]);
-//                         // result=credentials.
-//                         AuthorizationCredentialAppleID
-//
-//                         switch (result.status) {
-//                           case AuthorizationStatus.authorized:
-//                             try {
-//                               print("successfull sign in");
-//                               final AppleIdCredential appleIdCredential = result.credential;
-//
-//                               OAuthProvider oAuthProvider =
-//                               new OAuthProvider(providerId: "apple.com");
-//                               final AuthCredential credential = oAuthProvider.getCredential(
-//                                 idToken:
-//                                 String.fromCharCodes(appleIdCredential.identityToken),
-//                                 accessToken:
-//                                 String.fromCharCodes(appleIdCredential.authorizationCode),
-//                               );
-//
-//                               final AuthResult _res = await FirebaseAuth.instance
-//                                   .signInWithCredential(credential);
-//
-//                               FirebaseAuth.instance.currentUser().then((val) async {
-//                                 UserUpdateInfo updateUser = UserUpdateInfo();
-//                                 updateUser.displayName =
-//                                 "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
-//                                 updateUser.photoUrl =
-//                                 "define an url";
-//                                 await val.updateProfile(updateUser);
-//                               });
-//
-//                             } catch (e) {
-//                               print("error");
-//                             }
-//                             break;
-//                           case AuthorizationStatus.error:
-//                           // do something
-//                             break;
-//
-//                           case AuthorizationStatus.cancelled:
-//                             print('User cancelled');
-//                             break;
-//                         }
-//                       } catch (error) {
-//                         print("error with apple sign in");
-//                       }
-                    // }),
+                    //   child: SignInWithAppleButton(
+                    //     onPressed: () async {
+                    //       final result =
+                    //           await SignInWithApple.getAppleIDCredential(
+                    //               scopes: [
+                    //             AppleIDAuthorizationScopes.email,
+                    //             AppleIDAuthorizationScopes.fullName,
+                    //           ]);
+                    //       print(result);
+                    //     },
+                    //   ),
                     // ),
+                    SizedBox(
+                      height: 48,
+                      width: 300,
+                      child: SignInWithAppleButton(
+                        onPressed: () async {
+                          await Provider.of<AuthController>(context,
+                                  listen: false)
+                              .signInWithApple(scopes: [
+                            AppleIDAuthorizationScopes.email,
+                            AppleIDAuthorizationScopes.fullName
+                          ]);
+                          //   final credentials =
+                          //       await SignInWithApple.getAppleIDCredential(
+                          //           scopes: [
+                          //         AppleIDAuthorizationScopes.email,
+                          //         AppleIDAuthorizationScopes.fullName
+                          //       ]);
+                          //   debugPrint(credentials.email);
+                          //   debugPrint(credentials.state);
+                          //   OAuthProvider oAuthProvider =
+                          //       OAuthProvider("apple.com");
+                          //   final AuthCredential credential =
+                          //       oAuthProvider.credential(
+                          //     idToken: String.fromCharCodes(
+                          //         credentials.identityToken!.codeUnits),
+                          //     accessToken: String.fromCharCodes(
+                          //         credentials.authorizationCode.codeUnits),
+                          //   );
+                          //   await FirebaseAuth.instance
+                          //       .signInWithCredential(credential);
+                        },
+                      ),
+                    ),
 
                     // ElevatedButton.icon(
                     //   style: ButtonStyle(
